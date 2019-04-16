@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.cg.bank.model.Account;
 import com.cg.bank.service.AccountServiceImpl;
+import com.cg.bank.service.ITransactionService;
 
 @RestController
 @RequestMapping("/accounts")
@@ -22,6 +23,12 @@ public class AccountController {
 	int temp;
 	@Autowired
 	private AccountServiceImpl accountService;
+	
+	@Autowired
+	private ITransactionService transactionService;
+
+	int accountId;
+
 
 	@GetMapping("/")
 	public ModelAndView findAll() {
@@ -121,6 +128,21 @@ public class AccountController {
 		accountService.save(reciver);
 		modelAndView = new ModelAndView("menu");
 		return modelAndView;
+
+	}
+	
+	@GetMapping("showTransaction")
+	public ModelAndView showTransaction() {
+
+		// Find all the transactions made by the customer with the Id
+		List<Transaction> transactionsList = transactionService.findByAccountId(accountId);
+
+		// Display the JSP page
+		ModelAndView modelandview = new ModelAndView("showTransaction");
+		modelandview.addObject("TRANSACTIONSLIST", transactionsList);
+
+		// Return the JSP page
+		return modelandview;
 
 	}
 	

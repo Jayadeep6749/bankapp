@@ -8,7 +8,7 @@
 </head>
 <body>
 	<form action="accounts/balance" method="get">
-	    Enter the account id <input type="text" name="id" required /><br>
+	    Enter the account id <input type="text" name="id" required /><br><br>
 		<input type="Submit" value="check">
 
 	</form>
