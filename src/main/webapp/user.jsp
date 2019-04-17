@@ -9,8 +9,8 @@
 <body>
 <h2>Welcome to the User login page</h2>
 	<form action="accounts/userlogin" method="post">
-		Login Id <input type="text" name="username" required autofocus /> <br><br>
-		Password <input type="password" name="password" required autofocus />
+		Login Id <input type="text" name="id" required autofocus /> <br><br>
+		Password <input type="password" name="mobile" required autofocus />
 		<br>
 		<br>
 		 <input type="Submit" value="Login">

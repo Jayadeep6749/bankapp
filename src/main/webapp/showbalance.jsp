@@ -12,6 +12,10 @@
 		<input type="Submit" value="check">
 
 	</form>
-	<h2>The Balance is:</h2>${ACCOUNT.balance}
+	<h2>The Balance is:</h2>${ACCOUNT}
+	
+	<br>
+	<hr>
+	<a href="../menu.jsp">Go to Home Page</a>
 </body>
 </html>

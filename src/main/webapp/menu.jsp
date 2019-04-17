@@ -11,7 +11,7 @@
 	<a href="../deposit.jsp">Deposit the Money</a>
 	<br>
 	<a href="../fundtransfer.jsp">Transfer the Money</a><br>
-	<a href="../printtransaction.jsp">Print the Transactions</a><br>
+	<a href="../printtransactions.jsp">Print the Transactions</a><br>
 	<a href="../showbalance.jsp">Check the Balance</a><br>
 	<a href="../withdraw.jsp">Withdraw the Money</a><br>
 	

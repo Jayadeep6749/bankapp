@@ -56,19 +56,27 @@ public class AccountController {
 		}
 		return modelAndView;
 	}
-
+	
 	@PostMapping("userlogin")
-	public ModelAndView userlogin(@RequestParam String username, @RequestParam String password) {
-		String a = username;
-		String b = password;
+	public ModelAndView userlogin(@RequestParam int id, @RequestParam String mobile) {
+		Account account = accountService.findByIdAndMobile(id, mobile);
 		ModelAndView modelAndView = new ModelAndView();
-		if (a.equals("user") && b.equals("user")) {
-			modelAndView = new ModelAndView("menu");
+		if (account == null) {
+			modelAndView = new ModelAndView("noaccount");
+		}
 
+		// Login if its a valid customer in the table
+		else {
+			// Assign the given id to customer id
+			//ID = id;
+			modelAndView = new ModelAndView("menu");
 		}
 		return modelAndView;
 	}
 
+	
+		
+	
 	@PostMapping("save")
 	public ModelAndView save(/* @RequestParam Integer id */ @RequestParam String accounttype,
 			@RequestParam double balance, @RequestParam String name, @RequestParam String mobile) {
@@ -93,7 +101,6 @@ public class AccountController {
 		double newBalance=deposit+oldBalance;	
 		account.setBalance(newBalance);
 		
-		
 		Transaction transaction = new Transaction();
 		transaction.setAmount(deposit);
 		transaction.setType("DEPOSITED");
@@ -101,21 +108,29 @@ public class AccountController {
 		transactionService.save(transaction);
 		accountService.save(account);
 		
-		
-		
-		modelAndView = new ModelAndView("menu");
+		modelAndView = new ModelAndView("showbalance");
+		modelAndView.addObject("ACCOUNT",newBalance);
 		return modelAndView;
 	}	
 	
 	@GetMapping("update1")
-	public ModelAndView withdraw(@RequestParam Integer id,@RequestParam double withdraw) {
+	public ModelAndView withdraw(@RequestParam Integer id,@RequestParam int withdraw) {
 		ModelAndView modelAndView;
 		Account account =accountService.findById(id);
 		double oldBalance=account.getBalance();
 		double newBalance=oldBalance-withdraw;	
 		account.setBalance(newBalance);
 		accountService.save(account);
-		modelAndView = new ModelAndView("menu");
+	
+		Transaction transaction = new Transaction();
+		transaction.setAmount(withdraw);
+		transaction.setType("WITHDRAWN");
+		transaction.setAccount(account);
+		transactionService.save(transaction);
+		accountService.save(account);
+		
+		modelAndView = new ModelAndView("showbalance");
+		modelAndView.addObject("ACCOUNT",newBalance);
 		return modelAndView;
 	}
 	
@@ -129,7 +144,7 @@ public class AccountController {
 	}
 	
 	@GetMapping("/fundTransfer")
-	public ModelAndView fundTransfer(@RequestParam int id1,@RequestParam int id, @RequestParam double credit) {
+	public ModelAndView fundTransfer(@RequestParam int id1,@RequestParam int id, @RequestParam int credit) {
 		ModelAndView modelAndView;
 		Account sender = accountService.findById(id1);
 		double oldBalance = sender.getBalance();
@@ -142,7 +157,21 @@ public class AccountController {
 		double newBalance1 = oldBalance1 + credit;
 		reciver.setBalance(newBalance1);
 		accountService.save(reciver);
-		modelAndView = new ModelAndView("menu");
+		
+		Transaction send = new Transaction();
+		send.setAmount(credit);
+		send.setType("SENT to" + reciver);
+		send.setAccount(sender);
+		transactionService.save(send);
+
+		Transaction receive = new Transaction();
+		receive.setAmount(credit);
+		receive.setType("RECEIVED from" + sender);
+		receive.setAccount(reciver);
+		transactionService.save(receive);
+
+		modelAndView = new ModelAndView("showbalance");
+		modelAndView.addObject("ACCOUNT",newBalance);
 		return modelAndView;
 
 	}

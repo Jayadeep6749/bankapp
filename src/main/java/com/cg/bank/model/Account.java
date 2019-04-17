@@ -19,7 +19,7 @@ public class Account {
 	private int id;
 	private String name;
 	private String accounttype;
-	private Double balance;
+	private double balance;
 	private String mobile;
 	public int getId() {
 		return id;
@@ -39,10 +39,10 @@ public class Account {
 	public void setAccounttype(String accounttype) {
 		this.accounttype = accounttype;
 	}
-	public Double getBalance() {
+	public double getBalance() {
 		return balance;
 	}
-	public void setBalance(Double balance) {
+	public void setBalance(double balance) {
 		this.balance = balance;
 	}
 	public String getMobile() {
