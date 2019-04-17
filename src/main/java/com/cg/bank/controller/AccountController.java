@@ -2,8 +2,6 @@ package com.cg.bank.controller;
 
 import java.util.List;
 
-import javax.transaction.Transaction;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,8 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.cg.bank.model.Account;
+import com.cg.bank.model.Transaction;
 import com.cg.bank.service.AccountServiceImpl;
-import com.cg.bank.service.ITransactionService;
+import com.cg.bank.service.TransactionServiceImpl;
 
 @RestController
 @RequestMapping("/accounts")
@@ -25,10 +24,7 @@ public class AccountController {
 	private AccountServiceImpl accountService;
 	
 	@Autowired
-	private ITransactionService transactionService;
-
-	int accountId;
-
+	private TransactionServiceImpl transactionService;
 
 	@GetMapping("/")
 	public ModelAndView findAll() {
@@ -37,7 +33,18 @@ public class AccountController {
 		modelAndView.addObject("ACCOUNTLIST", accountlist);
 		return modelAndView;
 	}
-
+	
+	/*
+	 * //for printing the transaction done by a particular user
+	 * 
+	 * @GetMapping("/transaction") public ModelAndView gettransaction(@RequestParam
+	 * int id) {
+	 * 
+	 * List<Transaction> list1 = transactionService.findByAccountId(id);
+	 * ModelAndView modelAndView = new ModelAndView("printtransaction");
+	 * 
+	 * modelAndView.addObject("PRINT", list1); return modelAndView; }
+	 */
 	@PostMapping("login")
 	public ModelAndView login(@RequestParam String username, @RequestParam String password) {
 		String a = username;
@@ -66,7 +73,7 @@ public class AccountController {
 	public ModelAndView save(/* @RequestParam Integer id */ @RequestParam String accounttype,
 			@RequestParam double balance, @RequestParam String name, @RequestParam String mobile) {
 		Account account = new Account();
-		 account.setId(0); 
+		/* account.setId(0); */
 		account.setAccounttype(accounttype);
 		account.setBalance(balance);
 		account.setName(name);
@@ -79,13 +86,23 @@ public class AccountController {
 	}
 	
 	@GetMapping("update")
-	public ModelAndView deposit(@RequestParam Integer id,@RequestParam double deposit) {
+	public ModelAndView deposit(@RequestParam Integer id,@RequestParam int deposit) {
 		ModelAndView modelAndView;
 		Account account =accountService.findById(id);
 		double oldBalance=account.getBalance();
 		double newBalance=deposit+oldBalance;	
 		account.setBalance(newBalance);
+		
+		
+		Transaction transaction = new Transaction();
+		transaction.setAmount(deposit);
+		transaction.setType("DEPOSITED");
+		transaction.setAccount(account);
+		transactionService.save(transaction);
 		accountService.save(account);
+		
+		
+		
 		modelAndView = new ModelAndView("menu");
 		return modelAndView;
 	}	
@@ -108,7 +125,6 @@ public class AccountController {
 		Account account = accountService.findById(id);
 		modelAndView = new ModelAndView("showbalance");
 		modelAndView.addObject("ACCOUNT", account);
-
 		return modelAndView;
 	}
 	
@@ -130,15 +146,15 @@ public class AccountController {
 		return modelAndView;
 
 	}
-	
+
 	@GetMapping("showTransaction")
-	public ModelAndView showTransaction() {
+	public ModelAndView showTransaction(@RequestParam int id) {
 
 		// Find all the transactions made by the customer with the Id
-		List<Transaction> transactionsList = transactionService.findByAccountId(accountId);
+		List<Transaction> transactionsList = transactionService.findByAccountId(id);
 
 		// Display the JSP page
-		ModelAndView modelandview = new ModelAndView("showTransaction");
+		ModelAndView modelandview = new ModelAndView("printtransactions");
 		modelandview.addObject("TRANSACTIONSLIST", transactionsList);
 
 		// Return the JSP page
@@ -146,10 +162,4 @@ public class AccountController {
 
 	}
 	
-	
-
-
-	
-	
 }
-
