@@ -118,6 +118,7 @@ public class AccountController {
 		ModelAndView modelAndView;
 		Account account =accountService.findById(id);
 		double oldBalance=account.getBalance();
+		if(oldBalance > withdraw) {
 		double newBalance=oldBalance-withdraw;	
 		account.setBalance(newBalance);
 		accountService.save(account);
@@ -131,6 +132,9 @@ public class AccountController {
 		
 		modelAndView = new ModelAndView("showbalance");
 		modelAndView.addObject("ACCOUNT",newBalance);
+		}else {
+			modelAndView = new ModelAndView("error");
+		}
 		return modelAndView;
 	}
 	

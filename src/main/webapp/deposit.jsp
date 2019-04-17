@@ -13,5 +13,7 @@
 		<input type="Submit" value="Deposit">
 
 	</form>
+	<hr>
+	<a href="../menu.jsp">Go to Home Page</a>
 </body>
 </html>
