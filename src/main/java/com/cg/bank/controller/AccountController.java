@@ -19,7 +19,7 @@ import com.cg.bank.service.TransactionServiceImpl;
 @RequestMapping("/accounts")
 public class AccountController {
 
-	int temp;
+	int ID;
 	@Autowired
 	private AccountServiceImpl accountService;
 	
@@ -68,7 +68,7 @@ public class AccountController {
 		// Login if its a valid customer in the table
 		else {
 			// Assign the given id to customer id
-			//ID = id;
+			ID = id;
 			modelAndView = new ModelAndView("menu");
 		}
 		return modelAndView;
@@ -94,9 +94,9 @@ public class AccountController {
 	}
 	
 	@GetMapping("update")
-	public ModelAndView deposit(@RequestParam Integer id,@RequestParam int deposit) {
+	public ModelAndView deposit(/* @RequestParam Integer id, */@RequestParam int deposit) {
 		ModelAndView modelAndView;
-		Account account =accountService.findById(id);
+		Account account =accountService.findById(ID);
 		double oldBalance=account.getBalance();
 		double newBalance=deposit+oldBalance;	
 		account.setBalance(newBalance);
@@ -114,9 +114,9 @@ public class AccountController {
 	}	
 	
 	@GetMapping("update1")
-	public ModelAndView withdraw(@RequestParam Integer id,@RequestParam int withdraw) {
+	public ModelAndView withdraw(/*@RequestParam Integer id, */@RequestParam int withdraw) {
 		ModelAndView modelAndView;
-		Account account =accountService.findById(id);
+		Account account =accountService.findById(ID);
 		double oldBalance=account.getBalance();
 		if(oldBalance > withdraw) {
 		double newBalance=oldBalance-withdraw;	
@@ -148,9 +148,9 @@ public class AccountController {
 	}
 	
 	@GetMapping("/fundTransfer")
-	public ModelAndView fundTransfer(@RequestParam int id1,@RequestParam int id, @RequestParam int credit) {
+	public ModelAndView fundTransfer(/* @RequestParam int id1, */@RequestParam int id, @RequestParam int credit) {
 		ModelAndView modelAndView;
-		Account sender = accountService.findById(id1);
+		Account sender = accountService.findById(ID);
 		double oldBalance = sender.getBalance();
 		double newBalance = oldBalance - credit;
 		sender.setBalance(newBalance);
